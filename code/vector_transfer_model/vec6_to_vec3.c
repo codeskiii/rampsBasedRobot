@@ -1,46 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-/*
-<param name="degree" type="float[6]">
-    The array of the vector.
-</param>
-*/
-
-struct vec6 {
-    float degree[6]; 
-};
-
-/*
-<param name="degree" type="float[3]">
-    The array of the vector.
-</param>
-*/
-
-struct vec3 {
-    float degree[3]; 
-};
-
-/*
-<param name="abc" type="float[3]">
-    The array of the matrix.
-</param>
-*/
-
-struct joint_matrix {
-    float abc[3];  
-};
-
-/*
-<param name="collector" type="struct joint_matrix *">
-    The collector of the matrix.
-</param>
-*/
-
-struct joint_matrix_storage {
-    struct joint_matrix *collector[6];
-};
+#include "structs.c"
 
 /*
 <param name="vec6" type="struct vec6 *">
