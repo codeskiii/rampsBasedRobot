@@ -61,7 +61,7 @@ struct robot_organism {
 
     // x**y x**y_2 x**y_3 itd
     // 1*x + 6 * y ->
-    float *wages[7];
+    float *wages[3][7];
 
     struct vec6 solution;
     struct vec3 analyzed_solution;

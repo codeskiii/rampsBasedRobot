@@ -73,7 +73,7 @@ struct joint_matrix *multiply_joint_matrix(struct joint_matrix *matrix1, struct 
     // Matrix multiplication logic
     result->abc[0] = matrix1->abc[0] * matrix2->abc[0];  // A
     result->abc[1] = matrix1->abc[1] * matrix2->abc[1];  // B
-    result->abc[2] = matrix1->abc[2] + matrix2->abc[2];  // C (assuming additive for C)
+    result->abc[2] = matrix1->abc[2] * matrix2->abc[2];  // C
     
     return result;
 }
