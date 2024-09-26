@@ -115,7 +115,7 @@ struct joint_matrix_storage *multiply_whole_matrix(struct joint_matrix_storage *
 </returns>
 */
 
-struct vec3 vec6_to_vec3(struct vec6 *vec6) {
+struct vec3 *vec6_to_vec3(struct vec6 *vec6) {
     struct joint_matrix_storage *matrix_storage = create_whole_matrix(vec6);
     struct joint_matrix *result_matrix = matrix_storage->collector[0];
 
@@ -139,5 +139,5 @@ struct vec3 vec6_to_vec3(struct vec6 *vec6) {
     }
     free(matrix_storage);
 
-    return result_vec3;
+    return &result_vec3;
 }

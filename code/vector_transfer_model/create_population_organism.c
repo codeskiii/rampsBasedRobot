@@ -123,4 +123,6 @@ struct population *create_inherited_population(struct population *parent) {
                                                                                 parent->collector[i + 1]);
         }
     }
+
+    return currentPopulation;
 }

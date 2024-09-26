@@ -66,7 +66,7 @@ struct robot_organism {
     struct vec6 solution;
     struct vec3 analyzed_solution;
 
-    double fitness;
+    float fitness;
 };
 
 /*
