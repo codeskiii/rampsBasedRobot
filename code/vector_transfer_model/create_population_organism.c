@@ -3,33 +3,6 @@
 #include <time.h>
 #include "structs.c"
 
-/*
-<param name="min" type="int">
-   The minimum value.
-</param>
-<param name="max" type="int">
-    The maximum value.
-</param>
-<returns>
-    A random number between min and max.
-</returns>
-*/
-int rd_int(int min, int max) {
-    return rand() % (max - min + 1) + min;
-}
-
-/*
-<param name="max" type="float">
-    The maximum value.
-</param>
-<returns>
-    A random number between 0 and max.
-</returns>
-*/
-float *rd_float(float max) {
-    float result = ((float)rand() / (float)RAND_MAX) * max;
-    return &result;
-}
 
 /*
 <returns>
@@ -46,7 +19,7 @@ struct robot_organism *create_robot_not_inherited_organism() {
     currentRobot->goal = (struct vec3) {rd_int(-10, 10), rd_int(0, 10), rd_int(-10, 10)};
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
-            currentRobot->wages[i][j] = rd_float(1.0);
+            currentRobot->wages[i][j] = rd_float(0.8, 1.2);
         }
     }
     return currentRobot;

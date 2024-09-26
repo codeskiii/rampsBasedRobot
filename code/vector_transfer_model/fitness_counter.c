@@ -4,6 +4,7 @@
 #include <math.h>
 #include "structs.c"
 #include "vec6_to_vec3.c"
+#include "helpers.c"
 
 /*
 <param name="analyzed_solution" type="struct vec3 *">
