@@ -3,4 +3,7 @@
 
 #include "helpers.c"
 
+int rd_int(); 
+float rd_float();
+
 #endif // HELPERS_H

@@ -6,6 +6,8 @@
 #include "helpers.h"
 #include "fitness_counter.h"
 #include "vec6_to_vec3.h"
+#include "predict_on_wages.h"
+
 /*
 <description>
     The main function to run the gentic algorithm.
@@ -17,7 +19,7 @@ void run() {
 
     for (int i = 0; i < epochs; i++) {
         printf("Start of epoch no: %d\n", i);
-        struct population *predicted_population = predict_on_wages(population);
+        predict_on_wages(population);
 
         // rank population
         struct robot_organism **top_ranked = rank_population(population);

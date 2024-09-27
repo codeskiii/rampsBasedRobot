@@ -60,19 +60,9 @@ struct vec6 make_predictions_on_wages(struct robot_organism *robot) {
     The new population of the robots.
 </returns>
 */
-struct population *predict_on_wages(struct population *population) {
-    struct population *new_population = malloc(sizeof(struct population));
-    if (new_population == NULL) {
-        printf("Error: Failed to allocate memory for new_population\n");
-        return NULL;
-    }
-
+void predict_on_wages(struct population *population) {
     for (int i = 0; i < 100; i++) {
         struct robot_organism *robot = population->collector[i];
         robot->solution = make_predictions_on_wages(robot);
-
-        new_population->collector[i] = robot;
     }
-
-    return new_population;
 }
