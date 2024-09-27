@@ -1,9 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "structs.c"
-#include "create_population_organism.c"
-
+#include "structs.h"
+#include "create_population.h"
+#include "helpers.h"
+#include "fitness_counter.h"
+#include "vec6_to_vec3.h"
+/*
+<description>
+    The main function to run the gentic algorithm.
+</description>
+*/
 void run() {
     struct population *population = create_not_inherited_population();
     float epochs = 1000;
@@ -13,7 +20,7 @@ void run() {
         struct population *predicted_population = predict_on_wages(population);
 
         // rank population
-        struct robot_organism *top_ranked[10] = rank_population(population);
+        struct robot_organism **top_ranked = rank_population(population);
 
         // create new population
         population = create_inherited_population(top_ranked);

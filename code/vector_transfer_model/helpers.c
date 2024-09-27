@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include "structs.c"
+#include "structs.h"
 
 /*
 <param name="min" type="int">

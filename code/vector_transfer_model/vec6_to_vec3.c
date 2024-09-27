@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "structs.c"
+#include "structs.h"
 
 /*
 <param name="vec6" type="struct vec6 *">
@@ -19,7 +19,7 @@ struct joint_matrix *create_joint_matrix(struct vec6 *vec6, int index) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
-    
+
     float theta = vec6->degree[index];
 
     matrix->abc[0] = cos(theta);  // A = cos(theta_i)
@@ -126,11 +126,10 @@ struct vec3 *vec6_to_vec3(struct vec6 *vec6) {
         result_matrix = new_result;
     }
 
-    struct vec3 result_vec3 = {
-        result_matrix->abc[0],
-        result_matrix->abc[1],
-        result_matrix->abc[2]
-    };
+    struct vec3 *result_vec3 = malloc(sizeof(struct vec3));  // Dynamically allocate memory
+    result_vec3->degree[0] = result_matrix->abc[0];
+    result_vec3->degree[1] = result_matrix->abc[1];
+    result_vec3->degree[2] = result_matrix->abc[2];
 
     // Free allocated memory
     free(result_matrix);
@@ -139,5 +138,5 @@ struct vec3 *vec6_to_vec3(struct vec6 *vec6) {
     }
     free(matrix_storage);
 
-    return &result_vec3;
+    return result_vec3;
 }

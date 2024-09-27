@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include "structs.c"
-#include "helpers.c"
+#include "structs.h"
+#include "helpers.h"
 
 /*
 <param name="robot" type="struct robot_organism *">

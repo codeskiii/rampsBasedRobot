@@ -57,6 +57,13 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "math.h": "c"
+    "math.h": "c",
+    "create_population_organism.c": "cpp",
+    "cstdlib": "c",
+    "structs.h": "c",
+    "helpers.c": "cpp",
+    "stdio.h": "c",
+    "create_population.h": "c",
+    "helpers.h": "c"
   }
 }

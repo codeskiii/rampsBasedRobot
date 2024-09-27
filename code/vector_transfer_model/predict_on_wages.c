@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include "structs.c"
+#include "structs.h"
 
 /*
 <param name="base" type="float">
@@ -13,7 +13,7 @@
 </param> 
 */
 
-float *calculate_wages(float base, float *wages[6]) {
+float calculate_wages(float base, float *wages[6]) {
     /*
     X ** W_1 + X * W_2 ... = y
     */
@@ -22,7 +22,7 @@ float *calculate_wages(float base, float *wages[6]) {
         result += powf(base, *wages[i]);
    }
 
-   return &result;
+   return result;
 }
 
 /*
@@ -45,7 +45,7 @@ struct vec6 make_predictions_on_wages(struct robot_organism *robot) {
     for (int i = 0; i < 6; i++) {
         float cup_holder = 0; 
         for (int k = 0; k < 3; k++) {
-            cup_holder += *calculate_wages(goal_vector->degree[k], robot->wages[i]);
+            cup_holder += calculate_wages(goal_vector->degree[k], robot->wages[i]);
         }
         result->degree[i] = cup_holder;
     }

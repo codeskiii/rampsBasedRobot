@@ -1,3 +1,6 @@
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
 /*
 <param name="degree" type="float[6]">
     The array of the vector.
@@ -81,3 +84,5 @@ struct robot_organism {
 struct population {
     struct robot_organism *collector[100];
 };
+
+#endif // STRUCTS_H

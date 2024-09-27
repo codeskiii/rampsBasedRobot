@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include "structs.c"
-#include "vec6_to_vec3.c"
-#include "helpers.c"
+#include "structs.h"
+#include "vec6_to_vec3.h"
+#include "helpers.h"
 
 /*
 <param name="analyzed_solution" type="struct vec3 *">
@@ -50,8 +50,8 @@ float calc_fitness(struct robot_organism *robot) {
 <returns>
     The top 10 robots with the highest fitness.
 */
-struct robot_organism *rank_population(struct population *population) {
-    struct robot_organism *top_ranked[10] = malloc(sizeof(struct robot_organism) * 10);
+struct robot_organism **rank_population(struct population *population) {
+    struct robot_organism **top_ranked = (struct robot_organism**)malloc(sizeof(struct robot_organism*) * 10);
 
     for (int i = 0; i < 10; i++) {
         float fitness = calc_fitness(population->collector[i]);
