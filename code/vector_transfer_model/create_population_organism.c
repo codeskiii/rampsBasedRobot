@@ -82,7 +82,7 @@ struct robot_organism *create_robot_inherited_organism(struct robot_organism *pa
     A new population.
 </returns>
 */
-struct population *create_inherited_population(struct population *parent) {
+struct population *create_inherited_population(struct robot_organism *parents[10]) {
     // srand(time(NULL));
     struct population *currentPopulation = malloc(sizeof(struct population));
     if (currentPopulation == NULL) {
@@ -91,9 +91,8 @@ struct population *create_inherited_population(struct population *parent) {
     }
 
     for (int i = 0; i < 10; i++) {
-        for (int i = 0; i < 9; i++) {
-            currentPopulation->collector[i] = create_robot_inherited_organism(parent->collector[i],
-                                                                                parent->collector[i + 1]);
+        for (int j = 0; j < 9; j++) {
+            currentPopulation->collector[i * 9 + j] = create_robot_inherited_organism(parents[i], parents[(i + 1) % 10]);
         }
     }
 
