@@ -1,6 +1,9 @@
 #ifndef CREATE_POPULATION_H
 #define CREATE_POPULATION_H
 
-#include "create_population_organism.c"
+struct robot_organism *create_robot_not_inherited_organism();
+struct population *create_not_inherited_population();
+struct robot_organism *create_robot_inherited_organism(struct robot_organism *parentA, struct robot_organism *parentB);
+struct population *create_inherited_population(struct population *parentA, struct population *parentB);
 
 #endif // CREATE_POPULATION_H

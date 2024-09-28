@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "vec6_to_vec3.h"
 #include "helpers.h"
+#include "fitness_counter.h"
 
 /*
 <param name="analyzed_solution" type="struct vec3 *">

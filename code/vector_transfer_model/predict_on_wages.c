@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include "structs.h"
+#include "predict_on_wages.h"
 
 /*
 <param name="base" type="float">

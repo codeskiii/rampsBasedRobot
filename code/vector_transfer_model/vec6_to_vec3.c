@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "structs.h"
+#include "vec6_to_vec3.h"
 
 /*
 <param name="vec6" type="struct vec6 *">

@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include "structs.h"
+#include "helpers.h"
 
 /*
 <param name="min" type="int">
