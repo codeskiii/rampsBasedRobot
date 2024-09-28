@@ -51,8 +51,8 @@ float calc_fitness(struct robot_organism *robot) {
 <returns>
     The top 10 robots with the highest fitness.
 */
-struct robot_organism **rank_population(struct population *population) {
-    struct robot_organism **top_ranked = (struct robot_organism**)malloc(sizeof(struct robot_organism*) * 10);
+struct robot_organism *rank_population(struct population *population) {
+    struct robot_organism *top_ranked[10];
 
     for (int i = 0; i < 10; i++) {
         float fitness = calc_fitness(population->collector[i]);
@@ -74,5 +74,6 @@ struct robot_organism **rank_population(struct population *population) {
         }
     }
 
-    return top_ranked;
+    // Zwracamy wskaźnik na pierwszy element tablicy
+    return top_ranked[0];
 }

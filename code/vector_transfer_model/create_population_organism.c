@@ -53,8 +53,7 @@ struct population *create_not_inherited_population() {
 </param>
 <param name="parentB" type="struct robot_organism *">
     The second parent.
-</param>
-<returns>
+</returns>
     A new robot organism.
 */
 struct robot_organism *create_robot_inherited_organism(struct robot_organism *parentA,
@@ -86,10 +85,6 @@ struct robot_organism *create_robot_inherited_organism(struct robot_organism *pa
 struct population *create_inherited_population(struct robot_organism *parents[10]) {
     // srand(time(NULL));
     struct population *currentPopulation = (struct population*)malloc(sizeof(struct population));
-    if (currentPopulation == NULL) {
-        printf("Error: Failed to allocate memory for currentPopulation\n");
-        return NULL;
-    }
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 9; j++) {

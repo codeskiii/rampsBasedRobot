@@ -22,8 +22,7 @@ void run() {
         predict_on_wages(population);
 
         // rank population
-        struct robot_organism **top_ranked = rank_population(population);
-
+        struct robot_organism *top_ranked = rank_population(population);
         // create new population
         population = create_inherited_population(top_ranked);
     }
