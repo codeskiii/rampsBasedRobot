@@ -35,11 +35,12 @@ float cacl_pythagoras(struct vec3 *analyzed_solution, struct vec3 *goal) {
 float calc_fitness(struct robot_organism *robot) {
     float result;
 
-    struct vec3 *analyzed_solution = vec6_to_vec3(&robot->solution);
-    float distance = cacl_pythagoras(analyzed_solution, &robot->goal);
+    struct vec3 *analyzed_solution = vec6_to_vec3(&(robot->solution));
+    float distance = cacl_pythagoras(analyzed_solution, &(robot->goal));
 
-    // standaryzation
-    result = 1 / distance;
+    result = 1.0f / distance;
+
+    free(analyzed_solution);
 
     return result;
 }
@@ -51,25 +52,32 @@ float calc_fitness(struct robot_organism *robot) {
 <returns>
     The top 10 robots with the highest fitness.
 */
-struct robot_organism *rank_population(struct population *population) {
-    struct robot_organism *top_ranked = malloc(sizeof(struct robot_organism *) * 10);
+struct robot_organism **rank_population(struct population *population) {
+    struct robot_organism **top_ranked = malloc(10 * sizeof(struct robot_organism *));
 
     for (int i = 0; i < 10; i++) {
-        float fitness = calc_fitness(&(population->collector[i]));
-        top_ranked[i] = (population->collector[i]);
+        top_ranked[i] = &(population->collector[i]);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = i + 1; j < 10; j++) {
+            if (calc_fitness(top_ranked[i]) < calc_fitness(top_ranked[j])) {
+                struct robot_organism *temp = top_ranked[i];
+                top_ranked[i] = top_ranked[j];
+                top_ranked[j] = temp;
+            }
+        }
     }
 
     for (int i = 10; i < 100; i++) {
         float fitness = calc_fitness(&(population->collector[i]));
-        // Complexity:
-        // O(n * 10) => O(population_size * top_size)
-        for (int j = 0; j < 10; j++) {
-            if (fitness > calc_fitness(&(top_ranked[j]))) {
-                for (int k = 9; k > j; k--) {
-                    top_ranked[k] = top_ranked[k - 1];
-                }
-                top_ranked[j] = (population->collector[i]);
-                break;
+        if (fitness > calc_fitness(top_ranked[9])) {
+            top_ranked[9] = &(population->collector[i]);
+
+            for (int j = 8; j >= 0 && calc_fitness(top_ranked[j]) < fitness; j--) {
+                struct robot_organism *temp = top_ranked[j];
+                top_ranked[j] = top_ranked[j + 1];
+                top_ranked[j + 1] = temp;
             }
         }
     }

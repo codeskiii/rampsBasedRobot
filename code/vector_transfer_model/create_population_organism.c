@@ -47,7 +47,7 @@ struct population *create_not_inherited_population() {
     for (int j = 0; j < 100; j++) {
             //printf("init of organism\n");
             currentPopulation->collector[j] = create_robot_not_inherited_organism();
-            printf("organism no. %d \n", j);
+            //printf("organism no. %d \n", j);
         }
     return currentPopulation;
 }

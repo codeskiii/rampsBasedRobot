@@ -32,7 +32,7 @@ void run() {
         // rank population
         printf("Ranking\n");
         fflush(stdout);
-        struct robot_organism *top_ranked = rank_population((population));
+        struct robot_organism **top_ranked = rank_population((population));
         // create new population
         printf("Creating new population\n");
         fflush(stdout);
