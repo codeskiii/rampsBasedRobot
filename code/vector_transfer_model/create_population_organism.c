@@ -10,20 +10,25 @@
     A new robot organism.
 </returns>
 */
-struct robot_organism *create_robot_not_inherited_organism() {
-    struct robot_organism *currentRobot = (struct robot_organism*)malloc(sizeof(struct robot_organism));
-    if (currentRobot == NULL) {
-        printf("Error: Failed to allocate memory for currentRobot\n");
-        return NULL;
-    }
+struct robot_organism create_robot_not_inherited_organism() {
+    //printf("allocating memory for organism\n");
+    struct robot_organism *currentRobot = malloc(sizeof(struct robot_organism));
+    //printf("memory allocated\n");
 
-    currentRobot->goal = (struct vec3) {rd_int(-10, 10), rd_int(0, 10), rd_int(-10, 10)};
+    //printf("setting goal\n");
+    currentRobot->goal = (struct vec3){rd_int(-10, 10), rd_int(0, 10), rd_int(-10, 10)};
+    
+    //printf("initializing wages\n");
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
-            *(currentRobot->wages[i][j]) = rd_float(0.8, 1.2);
+            //printf("wage %d %d \n", i, j);
+            currentRobot->wages[i][j] = (rd_float(0.8, 1.2)); // 
+            //printf("wage inited\n");
+            //fflush(stdout);
         }
     }
-    return currentRobot;
+
+    return *currentRobot;
 }
 
 /*
@@ -39,11 +44,11 @@ struct population *create_not_inherited_population() {
         return NULL;
     }
 
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; i < 9; j++) {
-            currentPopulation->collector[i * 9 + j] = create_robot_not_inherited_organism();
+    for (int j = 0; j < 100; j++) {
+            //printf("init of organism\n");
+            currentPopulation->collector[j] = create_robot_not_inherited_organism();
+            printf("organism no. %d \n", j);
         }
-    }
     return currentPopulation;
 }
 
@@ -56,22 +61,17 @@ struct population *create_not_inherited_population() {
 </returns>
     A new robot organism.
 */
-struct robot_organism *create_robot_inherited_organism(struct robot_organism *parentA,
+struct robot_organism create_robot_inherited_organism(struct robot_organism *parentA,
                                                       struct robot_organism *parentB) {
     struct robot_organism *childRobot = (struct robot_organism*)malloc(sizeof(struct robot_organism));
-    if (childRobot == NULL) {
-        printf("Error: Failed to allocate memory for childRobot\n");
-        return NULL;
-    }
 
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
-            childRobot->wages[i][j] = (float*)malloc(sizeof(float));
-            *(childRobot->wages[i][j]) = (*(parentA->wages[i][j]) + *(parentB->wages[i][j])) / 2.0;
+            (childRobot->wages[i][j]) = ((parentA->wages[i][j]) + (parentB->wages[i][j])) / 2.0;
         }
     }
 
-    return childRobot;
+    return *childRobot;
 }   
 
 /*
@@ -88,7 +88,9 @@ struct population *create_inherited_population(struct robot_organism *parents) {
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 9; j++) {
+            //printf("init of organism\n");
             currentPopulation->collector[i * 9 + j] = create_robot_inherited_organism(&(parents[i]), &(parents[(i + 1) % 10]));
+            //printf("end\n");
         }
     }
 

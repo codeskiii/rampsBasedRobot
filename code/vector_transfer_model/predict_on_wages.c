@@ -46,7 +46,7 @@ struct vec6 make_predictions_on_wages(struct robot_organism *robot) {
     for (int i = 0; i < 6; i++) {
         float cup_holder = 0; 
         for (int k = 0; k < 3; k++) {
-            cup_holder += calculate_wages(goal_vector->degree[k], robot->wages[i]);
+            cup_holder += 0; //calculate_wages(goal_vector->degree[k], robot->wages[i]);
         }
         result->degree[i] = cup_holder;
     }
@@ -63,7 +63,7 @@ struct vec6 make_predictions_on_wages(struct robot_organism *robot) {
 */
 void predict_on_wages(struct population *population) {
     for (int i = 0; i < 100; i++) {
-        struct robot_organism *robot = population->collector[i];
+        struct robot_organism *robot = &population->collector[i];
         robot->solution = make_predictions_on_wages(robot);
     }
 }

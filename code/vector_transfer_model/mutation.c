@@ -15,7 +15,7 @@
 struct robot_organism *mutate(struct robot_organism *robot) {
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
-            *(robot->wages[i][j]) *= rd_float(0.7, 1.3);
+            robot->wages[i][j] *= rd_float(0.7, 1.3);
         }
     }
     return robot;

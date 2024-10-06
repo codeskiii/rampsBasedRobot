@@ -55,12 +55,12 @@ struct robot_organism *rank_population(struct population *population) {
     struct robot_organism *top_ranked = malloc(sizeof(struct robot_organism *) * 10);
 
     for (int i = 0; i < 10; i++) {
-        float fitness = calc_fitness(population->collector[i]);
-        top_ranked[i] = *(population->collector[i]);
+        float fitness = calc_fitness(&(population->collector[i]));
+        top_ranked[i] = (population->collector[i]);
     }
 
     for (int i = 10; i < 100; i++) {
-        float fitness = calc_fitness(population->collector[i]);
+        float fitness = calc_fitness(&(population->collector[i]));
         // Complexity:
         // O(n * 10) => O(population_size * top_size)
         for (int j = 0; j < 10; j++) {
@@ -68,7 +68,7 @@ struct robot_organism *rank_population(struct population *population) {
                 for (int k = 9; k > j; k--) {
                     top_ranked[k] = top_ranked[k - 1];
                 }
-                top_ranked[j] = *(population->collector[i]);
+                top_ranked[j] = (population->collector[i]);
                 break;
             }
         }

@@ -17,29 +17,28 @@ void run() {
     printf("init first population\n");
     fflush(stdout);
     struct population *population = create_not_inherited_population();
+    printf("end\n");
     float epochs = 1000;
 
-    printf("end\n");
-
-    printf("Start of training");
+    printf("Start of training\n");
     for (int i = 0; i < epochs; i++) {
         printf("Start of epoch no: %d\n", i);
         fflush(stdout);
 
-        printf("Predicting");
+        printf("Predicting\n");
         fflush(stdout);
         predict_on_wages(population);
 
         // rank population
-        printf("Ranking");
+        printf("Ranking\n");
         fflush(stdout);
         struct robot_organism *top_ranked = rank_population((population));
         // create new population
-        printf("Creating new population");
+        printf("Creating new population\n");
         fflush(stdout);
         population = create_inherited_population(top_ranked);
         
-        printf("End of epoch");
+        printf("End of epoch\n");
         fflush(stdout);
     }
 
@@ -48,7 +47,7 @@ void run() {
 }
 
 int main() {
-    printf("starting");
+    printf("starting\n");
     fflush(stdout);
     run();
     return 0;
