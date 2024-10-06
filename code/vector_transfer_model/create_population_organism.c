@@ -82,16 +82,21 @@ struct robot_organism create_robot_inherited_organism(struct robot_organism *par
     A new population.
 </returns>
 */
-struct population *create_inherited_population(struct robot_organism *parents) {
-    // srand(time(NULL));
-    struct population *currentPopulation = (struct population*)malloc(sizeof(struct population));
+struct population *create_inherited_population(struct robot_organism **parents) {
+    struct population *currentPopulation = malloc(sizeof(struct population));
+    if (currentPopulation == NULL) {
+        fprintf(stderr, "ERROR\n");
+        return NULL;
+    }
 
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 9; j++) {
-            //printf("init of organism\n");
-            currentPopulation->collector[i * 9 + j] = create_robot_inherited_organism(&(parents[i]), &(parents[(i + 1) % 10]));
-            //printf("end\n");
-        }
+    for (int i = 0; i < 100; i++) {
+        int parentA_index = rand() % 10;
+        int parentB_index;
+        do {
+            parentB_index = rand() % 10;
+        } while (parentB_index == parentA_index);
+
+        currentPopulation->collector[i] = create_robot_inherited_organism(parents[parentA_index], parents[parentB_index]);
     }
 
     return currentPopulation;
