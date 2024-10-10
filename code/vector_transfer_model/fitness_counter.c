@@ -33,16 +33,37 @@ float cacl_pythagoras(struct vec3 *analyzed_solution, struct vec3 *goal) {
     The fitness of the robot.
 */
 float calc_fitness(struct robot_organism *robot) {
-    float result;
-
     struct vec3 *analyzed_solution = vec6_to_vec3(&(robot->solution));
     float distance = cacl_pythagoras(analyzed_solution, &(robot->goal));
 
-    result = 1.0f / distance;
+    float base_fitness = 1.0f / (distance + 0.001f);
+
+    float wage_penalty = 0.0f;
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            float wage = robot->wages[i][j];
+            if (fabs(wage) > 10.0f) {
+                wage_penalty += 0.01f * (fabs(wage) - 10.0f);
+            }
+        }
+    }
+
+    float efficiency_reward = 0.0f;
+    float sum_of_squares = 0.0f;
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            sum_of_squares += robot->wages[i][j] * robot->wages[i][j];
+        }
+    }
+    efficiency_reward = 1.0f / (1.0f + sum_of_squares);
+
+    float final_fitness = base_fitness + efficiency_reward - wage_penalty;
+
+    final_fitness = fmaxf(final_fitness, 0.0f);
 
     free(analyzed_solution);
 
-    return result;
+    return final_fitness;
 }
 
 /*

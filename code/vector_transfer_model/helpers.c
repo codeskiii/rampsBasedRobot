@@ -38,3 +38,17 @@ float rd_float(float min, float max) {
     float result = ((float)rand() / (float)RAND_MAX) * (max - min) + min;
     return result;
 }
+
+void print_high_score (struct robot_organism **top_ranked) {
+    struct robot_organism top_organism = *(top_ranked[0]);
+    float high_score = top_organism.fitness;
+    printf("best score of epoch = %f \n", high_score);
+    /* FOR DEBUG
+    for(int i=0; i<=5 ; i++){
+        for (int j=0; j<=5; j++){
+            printf("wage: %f \n", top_organism.wages[i][j]);
+        }
+    }
+    */
+    fflush(stdout);
+}

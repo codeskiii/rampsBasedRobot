@@ -4,6 +4,11 @@
 #include "structs.h"
 #include "vec6_to_vec3.h"
 
+// arms lenghts
+# define l1 7.0
+# define l2 7.0
+
+
 /*
 <param name="vec6" type="struct vec6 *">
     The input vector with 6 degrees.
@@ -23,8 +28,8 @@ struct joint_matrix *create_joint_matrix(struct vec6 *vec6, int index) {
 
     float theta = vec6->degree[index];
 
-    matrix->abc[0] = cos(theta);  // A = cos(theta_i)
-    matrix->abc[1] = sin(theta);  // B = sin(theta_i)
+    matrix->abc[0] = cos(theta) * l1;  // A = cos(theta_i)
+    matrix->abc[1] = sin(theta) * l2;  // B = sin(theta_i)
     matrix->abc[2] = 1.0;         // C = d_i 
     
     return matrix;

@@ -18,29 +18,34 @@ void run() {
     fflush(stdout);
     struct population *population = create_not_inherited_population();
     printf("end\n");
-    float epochs = 1000;
+    float epochs = 1000000;
 
     printf("Start of training\n");
     for (int i = 0; i < epochs; i++) {
         printf("Start of epoch no: %d\n", i);
         fflush(stdout);
 
-        printf("Predicting\n");
-        fflush(stdout);
+        // Predict on the current population's wages
         predict_on_wages(population);
 
-        // rank population
-        printf("Ranking\n");
-        fflush(stdout);
+        // Rank population
         struct robot_organism **top_ranked = rank_population((population));
-        // create new population
-        printf("Creating new population\n");
-        fflush(stdout);
-        population = create_inherited_population(top_ranked);
-        
-        printf("End of epoch\n");
-        fflush(stdout);
+
+        // Print the high score for debugging/logging purposes
+        print_high_score(top_ranked);
+
+        // Create a new population based on top-ranked individuals
+        struct population *new_population = create_inherited_population(top_ranked);
+
+        // Free the old population before replacing it
+        free_population(population);
+
+        // Replace the old population with the new one
+        population = new_population;
     }
+
+    // Free the final population after the training is complete
+    free_population(population);
 
     printf("END\n");
     fflush(stdout);

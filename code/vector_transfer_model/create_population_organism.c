@@ -4,7 +4,12 @@
 #include "structs.h"
 #include "helpers.h"
 #include "create_population.h"
+#include "mutation.h"
 
+void free_population(struct population *pop) {
+    if (pop == NULL) return; 
+    free(pop);
+}
 /*
 <returns>
     A new robot organism.
@@ -13,6 +18,9 @@
 struct robot_organism create_robot_not_inherited_organism() {
     //printf("allocating memory for organism\n");
     struct robot_organism *currentRobot = malloc(sizeof(struct robot_organism));
+    if (currentRobot == NULL){
+        printf("ERROR: create_robot_not_inherited_organism");
+    }
     //printf("memory allocated\n");
 
     //printf("setting goal\n");
@@ -64,11 +72,25 @@ struct population *create_not_inherited_population() {
 struct robot_organism create_robot_inherited_organism(struct robot_organism *parentA,
                                                       struct robot_organism *parentB) {
     struct robot_organism *childRobot = (struct robot_organism*)malloc(sizeof(struct robot_organism));
+    if (childRobot == NULL) {
+        printf("ERROR: create_robot_inherited_organism");
+        exit(1);
+    }
 
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
-            (childRobot->wages[i][j]) = ((parentA->wages[i][j]) + (parentB->wages[i][j])) / 2.0;
+            // Krzyżowanie
+            if (rd_float(0, 1) < 0.5) {
+                childRobot->wages[i][j] = parentA->wages[i][j];
+            } else {
+                childRobot->wages[i][j] = parentB->wages[i][j];
+            }
         }
+    }
+
+
+    if (rd_float(0, 1) < 0.1) { 
+        childRobot = mutate(childRobot);
     }
 
     return *childRobot;
@@ -85,7 +107,7 @@ struct robot_organism create_robot_inherited_organism(struct robot_organism *par
 struct population *create_inherited_population(struct robot_organism **parents) {
     struct population *currentPopulation = malloc(sizeof(struct population));
     if (currentPopulation == NULL) {
-        fprintf(stderr, "ERROR\n");
+        fprintf(stderr, "ERROR: create_inherited_population\n");
         return NULL;
     }
 
@@ -96,7 +118,8 @@ struct population *create_inherited_population(struct robot_organism **parents) 
             parentB_index = rand() % 10;
         } while (parentB_index == parentA_index);
 
-        currentPopulation->collector[i] = create_robot_inherited_organism(parents[parentA_index], parents[parentB_index]);
+        currentPopulation->collector[i] = create_robot_inherited_organism(parents[parentA_index],
+                                                                          parents[parentB_index]);
     }
 
     return currentPopulation;
