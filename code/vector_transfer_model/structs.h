@@ -38,7 +38,7 @@ struct joint_matrix {
 */
 
 struct joint_matrix_storage {
-    struct joint_matrix *collector[6];
+    struct joint_matrix *collector[3];
 };
 
 /*

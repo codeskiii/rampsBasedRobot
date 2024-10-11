@@ -5,8 +5,12 @@
 #include "vec6_to_vec3.h"
 
 // arms lenghts
-# define l1 7.0
-# define l2 7.0
+
+//meat
+#define l1 7.0
+#define l2 7.0
+// nut
+#define l3 2.0 
 
 
 /*
@@ -19,19 +23,41 @@
 <returns>
     The resulting matrix.
 */
-struct joint_matrix *create_joint_matrix(struct vec6 *vec6, int index) {
+struct joint_matrix *create_joint_matrix(struct vec6 *vec6, int joint_index) {
     struct joint_matrix *matrix = (struct joint_matrix*)malloc(sizeof(struct joint_matrix));
     if (matrix == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
 
-    float theta = vec6->degree[index];
+    float theta_1 = vec6->degree[joint_index];
+    float theta_2 = vec6->degree[joint_index+1];
 
+    /*
     matrix->abc[0] = cos(theta) * l1;  // A = cos(theta_i)
     matrix->abc[1] = sin(theta) * l2;  // B = sin(theta_i)
     matrix->abc[2] = 1.0;         // C = d_i 
-    
+    */
+
+    switch (joint_index) {
+        // math :(
+        case 0:
+            matrix->abc[0] = sin(theta_1) * l1;
+            matrix->abc[1] = sin(theta_2) * l1;
+            matrix->abc[2] = cos(theta_2) * l1;
+            break;
+        case 1:
+            matrix->abc[0] = sin(theta_1) * l2;
+            matrix->abc[1] = sin(theta_2) * l2;
+            matrix->abc[2] = cos(theta_2) * l2;
+            break;
+        case 2:
+            matrix->abc[0] = sin(theta_1) * l3;
+            matrix->abc[1] = sin(theta_2) * l3;
+            matrix->abc[2] = cos(theta_2) * l3;
+            break;
+    }
+
     return matrix;
 }
 
@@ -51,7 +77,7 @@ struct joint_matrix_storage *create_whole_matrix(struct vec6 *vec6) {
         exit(EXIT_FAILURE);
     }
     
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 3; i++) {
         storage->collector[i] = create_joint_matrix(vec6, i);
     }
     
@@ -122,24 +148,54 @@ struct joint_matrix_storage *multiply_whole_matrix(struct joint_matrix_storage *
 */
 
 struct vec3 *vec6_to_vec3(struct vec6 *vec6) {
+    
     struct joint_matrix_storage *matrix_storage = create_whole_matrix(vec6);
-    struct joint_matrix *result_matrix = matrix_storage->collector[0];
+    if (matrix_storage == NULL) {
+        fprintf(stderr, "Nie udało się utworzyć macierzy\n");
+        return NULL;
+    }
 
-    for (int i = 1; i < 6; i++) {
+    struct joint_matrix *result_matrix = matrix_storage->collector[0];
+    
+    for (int i = 1; i < 3; i++) {
         struct joint_matrix *temp_matrix = matrix_storage->collector[i];
         struct joint_matrix *new_result = multiply_joint_matrix(result_matrix, temp_matrix);
-        free(result_matrix);  // Free previous result
+        
+        if (new_result == NULL) {
+            fprintf(stderr, "Błąd podczas mnożenia macierzy\n");
+            // Zwolnij pamięć przed wyjściem
+            for (int j = 0; j < 3; j++) {
+                free(matrix_storage->collector[j]);
+            }
+            free(matrix_storage);
+            return NULL;
+        }
+        
+        if (i > 1) {
+            free(result_matrix);  // Zwolnij poprzedni wynik, ale nie dla pierwszej iteracji
+        }
         result_matrix = new_result;
     }
 
-    struct vec3 *result_vec3 = malloc(sizeof(struct vec3));  // Dynamically allocate memory
+    struct vec3 *result_vec3 = malloc(sizeof(struct vec3));
+    if (result_vec3 == NULL) {
+        fprintf(stderr, "Nie udało się zaalokować pamięci dla vec3\n");
+        // Zwolnij pamięć przed wyjściem
+        free(result_matrix);
+        for (int i = 0; i < 3; i++) {
+            free(matrix_storage->collector[i]);
+        }
+        free(matrix_storage);
+        return NULL;
+    }
+
     result_vec3->degree[0] = result_matrix->abc[0];
     result_vec3->degree[1] = result_matrix->abc[1];
     result_vec3->degree[2] = result_matrix->abc[2];
 
-    // Free allocated memory
+    // Zwolnij zaalokowaną pamięć
     free(result_matrix);
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 3; i++) {
         free(matrix_storage->collector[i]);
     }
     free(matrix_storage);

@@ -18,6 +18,7 @@
     The distance between the analyzed solution and the goal.
 */
 float cacl_pythagoras(struct vec3 *analyzed_solution, struct vec3 *goal) {
+    // TO DO !!!!!!!!!!!!!!!!!
     float x_distance = (analyzed_solution->degree[0] - goal->degree[0]) * (analyzed_solution->degree[0] - goal->degree[0]);
     float y_distance = (analyzed_solution->degree[1] - goal->degree[1]) * (analyzed_solution->degree[1] - goal->degree[1]);
     float z_distance = (analyzed_solution->degree[2] - goal->degree[2]) * (analyzed_solution->degree[2] - goal->degree[2]);
