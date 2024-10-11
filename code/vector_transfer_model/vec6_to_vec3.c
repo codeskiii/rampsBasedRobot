@@ -172,7 +172,7 @@ struct vec3 *vec6_to_vec3(struct vec6 *vec6) {
         }
         
         if (i > 1) {
-            free(result_matrix);  // Zwolnij poprzedni wynik, ale nie dla pierwszej iteracji
+            free(result_matrix);
         }
         result_matrix = new_result;
     }

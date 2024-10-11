@@ -45,7 +45,7 @@ struct robot_organism create_robot_not_inherited_organism() {
 </returns>
 */
 struct population *create_not_inherited_population() {
-    srand(time(NULL));
+    //srand(time(NULL));
     struct population *currentPopulation = (struct population*)malloc(sizeof(struct population));
     if (currentPopulation == NULL) {
         printf("Error: Failed to allocate memory for currentPopulation\n");
@@ -69,17 +69,15 @@ struct population *create_not_inherited_population() {
 </returns>
     A new robot organism.
 */
-struct robot_organism create_robot_inherited_organism(struct robot_organism *parentA,
+struct robot_organism *create_robot_inherited_organism(struct robot_organism *parentA,
                                                       struct robot_organism *parentB) {
-    struct robot_organism *childRobot = (struct robot_organism*)malloc(sizeof(struct robot_organism));
+    struct robot_organism *childRobot = malloc(sizeof(struct robot_organism));
     if (childRobot == NULL) {
         printf("ERROR: create_robot_inherited_organism");
         exit(1);
     }
-
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
-            // Krzyżowanie
             if (rd_float(0, 1) < 0.5) {
                 childRobot->wages[i][j] = parentA->wages[i][j];
             } else {
@@ -87,14 +85,12 @@ struct robot_organism create_robot_inherited_organism(struct robot_organism *par
             }
         }
     }
-
-
-    if (rd_float(0, 1) < 0.1) { 
+    if (rd_float(0, 1) < 0.1) {
         childRobot = mutate(childRobot);
     }
+    return childRobot;
+}
 
-    return *childRobot;
-}   
 
 /*
 <param name="parent" type="struct population *">
@@ -118,8 +114,8 @@ struct population *create_inherited_population(struct robot_organism **parents) 
             parentB_index = rand() % 10;
         } while (parentB_index == parentA_index);
 
-        currentPopulation->collector[i] = create_robot_inherited_organism(parents[parentA_index],
-                                                                          parents[parentB_index]);
+        currentPopulation->collector[i] = *(create_robot_inherited_organism(parents[parentA_index],
+                                                                          parents[parentB_index]));
     }
 
     return currentPopulation;

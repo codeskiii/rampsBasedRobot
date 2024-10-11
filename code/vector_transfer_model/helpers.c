@@ -17,6 +17,7 @@
 </returns>
 */
 int rd_int(int min, int max) {
+    //srand(time(NULL));
     return rand() % (max - min + 1) + min;
 }
 
@@ -35,6 +36,7 @@ float rd_float(float min, float max) {
     //printf("random start\n");
     //float x = ((float)rand() / (float)RAND_MAX) * (max - min) + min;
     //printf("debug\n");
+    //srand(time(NULL));
     float result = ((float)rand() / (float)RAND_MAX) * (max - min) + min;
     return result;
 }

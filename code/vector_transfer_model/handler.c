@@ -14,6 +14,8 @@
 </description>
 */
 void run() {
+    srand(time(NULL));
+    
     printf("init first population\n");
     fflush(stdout);
     struct population *population = create_not_inherited_population();

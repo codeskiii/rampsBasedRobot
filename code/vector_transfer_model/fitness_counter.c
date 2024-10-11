@@ -17,12 +17,16 @@
 <returns>
     The distance between the analyzed solution and the goal.
 */
-float calc_distance(struct vec3 *analyzed_solution, struct vec3 *goal) {
-    float x_distance = abs((analyzed_solution->degree[0]) - (goal->degree[0]));
-    float y_distance = abs((analyzed_solution->degree[1]) - (goal->degree[1]));
-    float z_distance = abs((analyzed_solution->degree[2]) - (goal->degree[2]));
+float calculate_distance(struct vec3 pos1, struct vec3 pos2) {
+    float dx = powf(pos1.degree[0] - pos2.degree[0] ,2);
+    float dy = powf(pos1.degree[1] - pos2.degree[1], 2);
+    float dz = powf(pos1.degree[2] - pos2.degree[2], 2);
+    //printf("=================== %f %f %f", dx, dy, dz);
+    float distance_squared = dx + dy + dz;
+    
+    float distance = sqrt(distance_squared);
 
-    return sqrtf(powf(x_distance, 2) + powf(y_distance, 2) + powf(z_distance, 2));
+    return distance;
 }
 
 /*
@@ -34,10 +38,9 @@ float calc_distance(struct vec3 *analyzed_solution, struct vec3 *goal) {
 */
 float calc_fitness(struct robot_organism *robot) {
     struct vec3 *analyzed_solution = vec6_to_vec3(&(robot->solution));
-    float distance = calc_distance(analyzed_solution, &(robot->goal));
+    float distance = calculate_distance(*analyzed_solution, robot->goal);
 
-    // Zmiana: Użyj eksponencjalnej funkcji dla base_fitness
-    float base_fitness = expf(-distance);
+    float base_fitness = 1.0f/distance + 0.01f;
 
     float wage_penalty = 0.0f;
     for (int i = 0; i < 6; i++) {
@@ -56,10 +59,9 @@ float calc_fitness(struct robot_organism *robot) {
             sum_of_squares += robot->wages[i][j] * robot->wages[i][j];
         }
     }
-    efficiency_reward = 1.0f / (1.0f + sqrtf(sum_of_squares));
+    efficiency_reward = 100.0f / (100.0f + sqrtf(sum_of_squares));
 
-    // Zmiana: Dostosuj wagi składników fitness
-    float final_fitness = 0.7f * base_fitness + 0.2f * efficiency_reward - 0.1f * wage_penalty;
+    float final_fitness = 0.9f * base_fitness + 0.1f * efficiency_reward; // - 0.1f * wage_penalty;
 
     printf("distance: %f\n", distance);
     printf("base_fitness: %f\n", base_fitness);
@@ -73,6 +75,15 @@ float calc_fitness(struct robot_organism *robot) {
     return final_fitness;
 }
 
+int compare_fitness(const void *a, const void *b) {
+    struct robot_organism *robotA = *(struct robot_organism **)a;
+    struct robot_organism *robotB = *(struct robot_organism **)b;
+    // Compare based on fitness values
+    if (robotA->fitness < robotB->fitness) return 1; // Descending order
+    if (robotA->fitness > robotB->fitness) return -1;
+    return 0;
+}
+
 /*
 <param name="population" type="struct population *">
     The population of the robots.
@@ -81,37 +92,36 @@ float calc_fitness(struct robot_organism *robot) {
     The top 10 robots with the highest fitness.
 */
 struct robot_organism **rank_population(struct population *population) {
+    // Allocate memory for top_ranked
     struct robot_organism **top_ranked = malloc(10 * sizeof(struct robot_organism *));
+    if (top_ranked == NULL) {
+        fprintf(stderr, "Memory allocation failed for top_ranked\n");
+        return NULL; // Handle memory allocation failure
+    }
 
+    // Calculate fitness for all robots and store them in an array
     for (int i = 0; i < 100; i++) {
-        // Dodaj tę linię:
         calc_fitness(&(population->collector[i]));
     }
 
+    // Initialize top_ranked with the first 10 robots
     for (int i = 0; i < 10; i++) {
         top_ranked[i] = &(population->collector[i]);
     }
 
-    for (int i = 0; i < 10; i++) {
-        for (int j = i + 1; j < 10; j++) {
-            if (calc_fitness(top_ranked[i]) < calc_fitness(top_ranked[j])) {
-                struct robot_organism *temp = top_ranked[i];
-                top_ranked[i] = top_ranked[j];
-                top_ranked[j] = temp;
-            }
-        }
-    }
+    // Sort the top_ranked array based on fitness
+    qsort(top_ranked, 10, sizeof(struct robot_organism *), compare_fitness);
 
+    // Check remaining robots and update top_ranked if necessary
     for (int i = 10; i < 100; i++) {
-        float fitness = calc_fitness(&(population->collector[i]));
-        if (fitness > calc_fitness(top_ranked[9])) {
-            top_ranked[9] = &(population->collector[i]);
+        struct robot_organism *current_robot = &(population->collector[i]);
+        float current_fitness = calc_fitness(current_robot);
 
-            for (int j = 8; j >= 0 && calc_fitness(top_ranked[j]) < fitness; j--) {
-                struct robot_organism *temp = top_ranked[j];
-                top_ranked[j] = top_ranked[j + 1];
-                top_ranked[j + 1] = temp;
-            }
+        if (current_fitness > top_ranked[9]->fitness) {
+            top_ranked[9] = current_robot;
+
+            // Re-sort top_ranked to maintain order
+            qsort(top_ranked, 10, sizeof(struct robot_organism *), compare_fitness);
         }
     }
 
