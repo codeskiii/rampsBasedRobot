@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <float.h>
 #include "structs.h"
 #include "vec6_to_vec3.h"
 #include "helpers.h"
@@ -23,7 +24,9 @@ float calculate_distance(struct vec3 pos1, struct vec3 pos2) {
     float dz = powf(pos1.degree[2] - pos2.degree[2], 2);
     //printf("=================== %f %f %f", dx, dy, dz);
     float distance_squared = dx + dy + dz;
-    
+    if ((isnan(distance_squared) || isinf(distance_squared))) {
+        distance_squared = FLT_MAX;
+    }
     float distance = sqrt(distance_squared);
 
     return distance;
@@ -63,10 +66,10 @@ float calc_fitness(struct robot_organism *robot) {
 
     float final_fitness = 0.9f * base_fitness + 0.1f * efficiency_reward; // - 0.1f * wage_penalty;
 
-    printf("distance: %f\n", distance);
-    printf("base_fitness: %f\n", base_fitness);
-    printf("wage_penalty: %f\n", wage_penalty);
-    printf("efficiency_reward: %f\n", efficiency_reward);
+    //printf("distance: %f\n", distance);
+    //printf("base_fitness: %f\n", base_fitness);
+    //printf("wage_penalty: %f\n", wage_penalty);
+    //printf("efficiency_reward: %f\n", efficiency_reward);
 
     free(analyzed_solution);
 
