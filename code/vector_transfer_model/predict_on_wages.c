@@ -14,13 +14,13 @@
 </param> 
 */
 
-float calculate_wages(float base, float *wages[6]) {
+float calculate_wages(float base, float *wages) {
     /*
     X ** W_1 + X * W_2 ... = y
     */
    float result = 0;
    for (int i = 0; i < 6; i++) {
-        result += powf(base, *wages[i]);
+        result += powf(base, wages[i]);
    }
 
    return result;
@@ -35,22 +35,17 @@ float calculate_wages(float base, float *wages[6]) {
 </returns>
 */
 struct vec6 make_predictions_on_wages(struct robot_organism *robot) {
-    struct vec6 *result = malloc(sizeof(struct vec6));
-    if (result == NULL) {
-        printf("Error: Failed to allocate memory for result\n");
-        return (struct vec6) {0, 0, 0, 0, 0, 0};
-    }
-
+    struct vec6 result;
     struct vec3 *goal_vector = &robot->goal; 
 
     for (int i = 0; i < 6; i++) {
         float cup_holder = 0; 
         for (int k = 0; k < 3; k++) {
-            cup_holder += 0; //calculate_wages(goal_vector->degree[k], robot->wages[i]);
+            cup_holder += calculate_wages(goal_vector->degree[k], robot->wages[i]);
         }
-        result->degree[i] = cup_holder;
+        result.degree[i] = cup_holder;
     }
-    return *result;
+    return result;
 }
 
 /*

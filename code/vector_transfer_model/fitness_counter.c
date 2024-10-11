@@ -17,13 +17,12 @@
 <returns>
     The distance between the analyzed solution and the goal.
 */
-float cacl_pythagoras(struct vec3 *analyzed_solution, struct vec3 *goal) {
-    // TO DO !!!!!!!!!!!!!!!!!
-    float x_distance = (analyzed_solution->degree[0] - goal->degree[0]) * (analyzed_solution->degree[0] - goal->degree[0]);
-    float y_distance = (analyzed_solution->degree[1] - goal->degree[1]) * (analyzed_solution->degree[1] - goal->degree[1]);
-    float z_distance = (analyzed_solution->degree[2] - goal->degree[2]) * (analyzed_solution->degree[2] - goal->degree[2]);
+float calc_distance(struct vec3 *analyzed_solution, struct vec3 *goal) {
+    float x_distance = abs((analyzed_solution->degree[0]) - (goal->degree[0]));
+    float y_distance = abs((analyzed_solution->degree[1]) - (goal->degree[1]));
+    float z_distance = abs((analyzed_solution->degree[2]) - (goal->degree[2]));
 
-    return sqrtf(x_distance + y_distance + z_distance);
+    return sqrtf(powf(x_distance, 2) + powf(y_distance, 2) + powf(z_distance, 2));
 }
 
 /*
@@ -35,9 +34,10 @@ float cacl_pythagoras(struct vec3 *analyzed_solution, struct vec3 *goal) {
 */
 float calc_fitness(struct robot_organism *robot) {
     struct vec3 *analyzed_solution = vec6_to_vec3(&(robot->solution));
-    float distance = cacl_pythagoras(analyzed_solution, &(robot->goal));
+    float distance = calc_distance(analyzed_solution, &(robot->goal));
 
-    float base_fitness = 1.0f / (distance + 0.001f);
+    // Zmiana: Użyj eksponencjalnej funkcji dla base_fitness
+    float base_fitness = expf(-distance);
 
     float wage_penalty = 0.0f;
     for (int i = 0; i < 6; i++) {
@@ -56,14 +56,20 @@ float calc_fitness(struct robot_organism *robot) {
             sum_of_squares += robot->wages[i][j] * robot->wages[i][j];
         }
     }
-    efficiency_reward = 1.0f / (1.0f + sum_of_squares);
+    efficiency_reward = 1.0f / (1.0f + sqrtf(sum_of_squares));
 
-    float final_fitness = base_fitness + efficiency_reward - wage_penalty;
+    // Zmiana: Dostosuj wagi składników fitness
+    float final_fitness = 0.7f * base_fitness + 0.2f * efficiency_reward - 0.1f * wage_penalty;
 
-    final_fitness = fmaxf(final_fitness, 0.0f);
+    printf("distance: %f\n", distance);
+    printf("base_fitness: %f\n", base_fitness);
+    printf("wage_penalty: %f\n", wage_penalty);
+    printf("efficiency_reward: %f\n", efficiency_reward);
 
     free(analyzed_solution);
 
+    robot->fitness = final_fitness; 
+    // printf("fitness: %f", final_fitness);
     return final_fitness;
 }
 
@@ -76,6 +82,11 @@ float calc_fitness(struct robot_organism *robot) {
 */
 struct robot_organism **rank_population(struct population *population) {
     struct robot_organism **top_ranked = malloc(10 * sizeof(struct robot_organism *));
+
+    for (int i = 0; i < 100; i++) {
+        // Dodaj tę linię:
+        calc_fitness(&(population->collector[i]));
+    }
 
     for (int i = 0; i < 10; i++) {
         top_ranked[i] = &(population->collector[i]);

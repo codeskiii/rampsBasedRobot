@@ -30,7 +30,7 @@ struct robot_organism create_robot_not_inherited_organism() {
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 6; j++) {
             //printf("wage %d %d \n", i, j);
-            currentRobot->wages[i][j] = (rd_float(0.8, 1.2)); // 
+            currentRobot->wages[i][j] = rd_float(-1.0, 1.0);
             //printf("wage inited\n");
             //fflush(stdout);
         }
