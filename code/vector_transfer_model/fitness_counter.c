@@ -73,6 +73,10 @@ float calc_fitness(struct robot_organism *robot) {
 
     free(analyzed_solution);
 
+    if ((isnan(final_fitness) || isinf(final_fitness))) {
+        final_fitness = FLT_MAX;
+    }
+
     robot->fitness = final_fitness; 
     // printf("fitness: %f", final_fitness);
     return final_fitness;
@@ -95,35 +99,28 @@ int compare_fitness(const void *a, const void *b) {
     The top 10 robots with the highest fitness.
 */
 struct robot_organism **rank_population(struct population *population) {
-    // Allocate memory for top_ranked
     struct robot_organism **top_ranked = malloc(10 * sizeof(struct robot_organism *));
     if (top_ranked == NULL) {
         fprintf(stderr, "Memory allocation failed for top_ranked\n");
-        return NULL; // Handle memory allocation failure
+        return NULL;
     }
 
-    // Calculate fitness for all robots and store them in an array
     for (int i = 0; i < 100; i++) {
         calc_fitness(&(population->collector[i]));
     }
 
-    // Initialize top_ranked with the first 10 robots
     for (int i = 0; i < 10; i++) {
         top_ranked[i] = &(population->collector[i]);
     }
 
-    // Sort the top_ranked array based on fitness
     qsort(top_ranked, 10, sizeof(struct robot_organism *), compare_fitness);
 
-    // Check remaining robots and update top_ranked if necessary
     for (int i = 10; i < 100; i++) {
         struct robot_organism *current_robot = &(population->collector[i]);
         float current_fitness = calc_fitness(current_robot);
 
         if (current_fitness > top_ranked[9]->fitness) {
             top_ranked[9] = current_robot;
-
-            // Re-sort top_ranked to maintain order
             qsort(top_ranked, 10, sizeof(struct robot_organism *), compare_fitness);
         }
     }

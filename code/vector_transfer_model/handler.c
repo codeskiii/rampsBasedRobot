@@ -9,7 +9,7 @@
 #include "predict_on_wages.h"
 #include "fast_quit.h"
 
-#define MAX_NOT_DIVERSED 100
+#define MAX_NOT_DIVERSED 50
 
 /*
 <description>
@@ -23,11 +23,11 @@ void run() {
     fflush(stdout);
     struct population *population = create_not_inherited_population();
     printf("end\n");
-    float epochs = 10000;
+    float epochs = 1000000000;
     int not_diversed_strak = 0;
 
-    struct robot_organism **rolled_top_ranked = malloc(10 * sizeof(struct robot_organism*));
-    struct robot_organism **mine_saver = malloc(10 * sizeof(struct robot_organism*));
+    struct robot_organism **rolled_top_ranked;
+    struct robot_organism **mine_saver;
     mine_saver = rank_population((population));
 
     printf("Start of training\n");
@@ -41,20 +41,16 @@ void run() {
 
         // Rank population
         //printf("Ranking\n");
-        struct robot_organism **top_ranked = rank_population((population));
+        struct robot_organism **top_ranked = rank_population(population);
 
         not_diversed_strak += count_not_diversed_streak(top_ranked);
         if (not_diversed_strak >= MAX_NOT_DIVERSED){
             not_diversed_strak = 0;
-            printf("Fast Roll...");
-            top_ranked = fast_roll(top_ranked);
+            printf("sort_them...\n");
+            mine_saver = sort_them(mine_saver, top_ranked);
+            top_ranked = mine_saver;
         }
-
-        rolled_top_ranked = roll_them(top_ranked);
-        free(top_ranked);
-        top_ranked = rolled_top_ranked;
-
-        mine_saver = sort_them(mine_saver, top_ranked);
+        top_ranked = fast_roll(top_ranked);
 
         // Print the high score for debugging/logging purposes
         //printf("High score\n");
@@ -68,10 +64,10 @@ void run() {
         // Free the old population before replacing it
         //printf("Free previous pop\n");
         free_population(population);
-
         // Replace the old population with the new one
         //printf("Set new pop to pop");
         population = new_population;
+        free(top_ranked);
     }
     // Free the final population after the training is complete
     free_population(population);

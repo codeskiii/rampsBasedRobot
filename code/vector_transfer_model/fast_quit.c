@@ -22,21 +22,29 @@ int count_not_diversed_streak (struct robot_organism **top_ranked)  {
 }
 
 struct robot_organism **fast_roll(struct robot_organism **top_ranked) {
-    struct robot_organism **new_top_ranked = malloc(10 * sizeof(struct robot_organism*));
 
-    for (int i = 0; i < 8; i++) {
+    struct robot_organism **new_top_ranked = malloc(10 * sizeof(struct robot_organism*));
+    if (new_top_ranked == NULL) {
+        fprintf(stderr, "Memory allocation failed for new_top_ranked\n");
+        return NULL;
+    }
+
+    for (int i = 0; i < 9; i++) {
         new_top_ranked[i] = top_ranked[i]; 
     }
 
-    for (int i = 8; i < 10; i++) {
-        new_top_ranked[i] = malloc(sizeof(struct robot_organism));
+    new_top_ranked[9] = malloc(sizeof(struct robot_organism));
+    if (new_top_ranked[9] == NULL) {
 
-        *new_top_ranked[i] = create_robot_not_inherited_organism();
+        free(new_top_ranked);
+        return NULL;
     }
+    *new_top_ranked[9] = create_robot_not_inherited_organism();
 
     return new_top_ranked;
 }
 
+/*
 struct robot_organism **roll_them(struct robot_organism **top_ranked) {
     struct robot_organism **new_top_ranked = malloc(10 * sizeof(struct robot_organism*));
 
@@ -51,6 +59,7 @@ struct robot_organism **roll_them(struct robot_organism **top_ranked) {
 
     return new_top_ranked;
 }
+*/
 
 int compare(const void *a, const void *b) {
     struct robot_organism *robotA = *(struct robot_organism **)a;
