@@ -6,6 +6,8 @@
 #include "create_population.h"
 #include "mutation.h"
 
+#define WAGE_SIZE 12
+
 void free_population(struct population *pop) {
     if (pop == NULL) return; 
     free(pop);
@@ -28,7 +30,7 @@ struct robot_organism create_robot_not_inherited_organism() {
     
     //printf("initializing wages\n");
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < WAGE_SIZE; j++) {
             //printf("wage %d %d \n", i, j);
             currentRobot->wages[i][j] = rd_float(-1.0, 1.0);
             //printf("wage inited\n");
@@ -77,7 +79,7 @@ struct robot_organism *create_robot_inherited_organism(struct robot_organism *pa
         exit(1);
     }
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < WAGE_SIZE; j++) {
             if (rd_float(0, 1) < 0.6) {
                 childRobot->wages[i][j] = parentA->wages[i][j];
             } else {

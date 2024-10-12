@@ -12,6 +12,8 @@
 // nut
 #define l3 2.0 
 
+#define WAGE_SIZE 12
+
 
 /*
 <param name="vec6" type="struct vec6 *">
@@ -131,7 +133,7 @@ struct joint_matrix_storage *multiply_whole_matrix(struct joint_matrix_storage *
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < WAGE_SIZE; i++) {
         result->collector[i] = multiply_joint_matrix(matrix_storage1->collector[i], matrix_storage2->collector[i]);
     }
 

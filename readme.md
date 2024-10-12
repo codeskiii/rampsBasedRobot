@@ -5,7 +5,7 @@
 
 ### Softwear-hardwear system consists of:
 
-* vector transfer model
+* vector transfer model 
 
 * firmwear
 

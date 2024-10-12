@@ -5,6 +5,10 @@
 #include "structs.h"
 #include "helpers.h"
 
+#define WAGE_SIZE 12
+
+#define WAGE_MUT_PROB 0.3
+
 /*
 <param name="robot" type="struct robot_organism *">
     The robot to mutate.
@@ -15,7 +19,8 @@
 struct robot_organism *mutate(struct robot_organism *robot) {
     //printf("MUTATION \n");
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 6; j++) {
+        if ((rd_float(0, 1) < WAGE_MUT_PROB))
+        for (int j = 0; j < WAGE_SIZE; j++) {
             robot->wages[i][j] *= rd_float(0.7, 1.3);
         }
     }

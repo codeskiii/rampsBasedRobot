@@ -28,15 +28,19 @@ void run() {
         fflush(stdout);
 
         // Predict on the current population's wages
+        //printf("Predicting\n");
         predict_on_wages(population);
 
         // Rank population
+        //printf("Ranking\n");
         struct robot_organism **top_ranked = rank_population((population));
 
         // Print the high score for debugging/logging purposes
+        //printf("High score\n");
         print_high_score(top_ranked);
 
         // Create a new population based on top-ranked individuals
+        //printf("New population\n");
         struct population *new_population = create_inherited_population(top_ranked);
 
         // Free the old population before replacing it
