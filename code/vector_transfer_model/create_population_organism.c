@@ -10,7 +10,7 @@
 
 void free_population(struct population *pop) {
     if (pop == NULL) return; 
-    free(pop);
+    free(pop); 
 }
 /*
 <returns>
@@ -18,27 +18,14 @@ void free_population(struct population *pop) {
 </returns>
 */
 struct robot_organism create_robot_not_inherited_organism() {
-    //printf("allocating memory for organism\n");
-    struct robot_organism *currentRobot = malloc(sizeof(struct robot_organism));
-    if (currentRobot == NULL){
-        printf("ERROR: create_robot_not_inherited_organism");
-    }
-    //printf("memory allocated\n");
-
-    //printf("setting goal\n");
-    currentRobot->goal = (struct vec3){rd_int(-10, 10), rd_int(0, 10), rd_int(-10, 10)};
-    
-    //printf("initializing wages\n");
+    struct robot_organism currentRobot;
+    currentRobot.goal = (struct vec3){rd_int(-20, 20), rd_int(-10, 10), rd_int(-20, 20)};
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < WAGE_SIZE; j++) {
-            //printf("wage %d %d \n", i, j);
-            currentRobot->wages[i][j] = rd_float(-1.0, 1.0);
-            //printf("wage inited\n");
-            //fflush(stdout);
+            currentRobot.wages[i][j] = rd_float(-2.0, 2.0);
         }
     }
-
-    return *currentRobot;
+    return currentRobot;
 }
 
 /*
@@ -80,10 +67,18 @@ struct robot_organism *create_robot_inherited_organism(struct robot_organism *pa
     }
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < WAGE_SIZE; j++) {
-            if (rd_float(0, 1) < 0.6) {
-                childRobot->wages[i][j] = parentA->wages[i][j];
+            if (rd_float(0, 1) < 0.9) {
+                if (parentA->fitness > parentB->fitness) {
+                    childRobot->wages[i][j] = (parentA->wages[i][j] * 9.0f + parentB->wages[i][j])/10.0f;
+                } else {
+                    childRobot->wages[i][j] = (parentA->wages[i][j] + parentB->wages[i][j] * 9.0f)/10.0f;
+                }
             } else {
-                childRobot->wages[i][j] = parentB->wages[i][j];
+                if (rd_float(0, 1) < 0.5) {
+                    childRobot->wages[i][j] = (parentA->wages[i][j] * 2.0f + parentB->wages[i][j])/3.0f;
+                } else {
+                    childRobot->wages[i][j] = (parentA->wages[i][j] + parentB->wages[i][j] * 2.0f)/3.0f;
+                }
             }
         }
     }

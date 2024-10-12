@@ -8,8 +8,6 @@
 #include "helpers.h"
 #include "fitness_counter.h"
 
-#define WAGE_SIZE 12
-
 /*
 <param name="analyzed_solution" type="struct vec3 *">
     The analyzed solution.
@@ -49,7 +47,7 @@ float calc_fitness(struct robot_organism *robot) {
 
     float wage_penalty = 0.0f;
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < WAGE_SIZE; j++) {
+        for (int j = 0; j < 6; j++) {
             float wage = robot->wages[i][j];
             if (fabs(wage) > 10.0f) {
                 wage_penalty += 0.01f * (fabs(wage) - 10.0f);
@@ -60,7 +58,7 @@ float calc_fitness(struct robot_organism *robot) {
     float efficiency_reward = 0.0f;
     float sum_of_squares = 0.0f;
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < WAGE_SIZE; j++) {
+        for (int j = 0; j < 6; j++) {
             sum_of_squares += robot->wages[i][j] * robot->wages[i][j];
         }
     }
