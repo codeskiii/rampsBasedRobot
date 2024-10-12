@@ -7,6 +7,9 @@
 #include "fitness_counter.h"
 #include "vec6_to_vec3.h"
 #include "predict_on_wages.h"
+#include "fast_quit.h"
+
+#define MAX_NOT_DIVERSED 100
 
 /*
 <description>
@@ -20,7 +23,8 @@ void run() {
     fflush(stdout);
     struct population *population = create_not_inherited_population();
     printf("end\n");
-    float epochs = 1000000;
+    float epochs = 100000;
+    int not_diversed_strak = 0;
 
     printf("Start of training\n");
     for (int i = 0; i < epochs; i++) {
@@ -34,6 +38,13 @@ void run() {
         // Rank population
         //printf("Ranking\n");
         struct robot_organism **top_ranked = rank_population((population));
+
+        not_diversed_strak += count_not_diversed_streak(top_ranked);
+        //if (not_diversed_strak >= MAX_NOT_DIVERSED){
+        //    not_diversed_strak = 0;
+        //    printf("Fast Roll...");
+            top_ranked = fast_roll(top_ranked);
+        //}
 
         // Print the high score for debugging/logging purposes
         //printf("High score\n");
