@@ -46,8 +46,8 @@ struct vec6 make_predictions_on_wages(struct robot_organism *robot) {
     for (int i = 0; i < ROBOT_SIZE; i++) {
         float cup_holder = calculate_wages(&(robot->goal), robot->wages[i]);
 
-        if (isinf(cup_holder)) {
-            cup_holder = FLT_MAX; 
+        if (isnan(cup_holder) || isinf(cup_holder) || isinf(cup_holder)) {
+            cup_holder = FLT_MAX;
         }
 
         result.degree[i] = cup_holder;

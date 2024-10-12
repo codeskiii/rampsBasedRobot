@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <float.h>
 #include "structs.h"
 #include "vec6_to_vec3.h"
 
@@ -45,18 +46,45 @@ struct joint_matrix *create_joint_matrix(struct vec6 *vec6, int joint_index) {
         // math :(
         case 0:
             matrix->abc[0] = sin(theta_1) * l1;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }
             matrix->abc[1] = sin(theta_2) * l1;
+            if (isnan(matrix->abc[1]) || isinf(matrix->abc[1])) {
+                matrix->abc[1] = FLT_MAX;
+            }
             matrix->abc[2] = cos(theta_2) * l1;
+            if (isnan(matrix->abc[2]) || isinf(matrix->abc[2])) {
+                matrix->abc[2] = FLT_MAX;
+            }
             break;
         case 1:
             matrix->abc[0] = sin(theta_1) * l2;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }
             matrix->abc[1] = sin(theta_2) * l2;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }            
             matrix->abc[2] = cos(theta_2) * l2;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }            
             break;
         case 2:
             matrix->abc[0] = sin(theta_1) * l3;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }            
             matrix->abc[1] = sin(theta_2) * l3;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }            
             matrix->abc[2] = cos(theta_2) * l3;
+            if (isnan(matrix->abc[0]) || isinf(matrix->abc[0])) {
+                matrix->abc[0] = FLT_MAX;
+            }            
             break;
     }
 

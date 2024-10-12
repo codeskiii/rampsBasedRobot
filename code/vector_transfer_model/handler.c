@@ -23,7 +23,7 @@ void run() {
     fflush(stdout);
     struct population *population = create_not_inherited_population();
     printf("end\n");
-    float epochs = 100000;
+    float epochs = 10000;
     int not_diversed_strak = 0;
 
     struct robot_organism **rolled_top_ranked = malloc(10 * sizeof(struct robot_organism*));
@@ -59,6 +59,7 @@ void run() {
         // Print the high score for debugging/logging purposes
         //printf("High score\n");
         print_high_score(top_ranked);
+        print_high_score(mine_saver);
 
         // Create a new population based on top-ranked individuals
         //printf("New population\n");
@@ -72,7 +73,6 @@ void run() {
         //printf("Set new pop to pop");
         population = new_population;
     }
-
     // Free the final population after the training is complete
     free_population(population);
 

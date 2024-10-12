@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <float.h>
 #include "structs.h"
 #include "helpers.h"
 
@@ -13,8 +14,8 @@
 #define MUTATION_RANGE_LOW 0.8
 #define MUTATION_RANGE_HIGH 1.2
 
-#define MIN_WAGE_VALUE -2.0       
-#define MAX_WAGE_VALUE 2.0         
+#define MIN_WAGE_VALUE -1000.0      
+#define MAX_WAGE_VALUE 1000.0         
 
 /*
 <param name="robot" type="struct robot_organism *">
@@ -30,8 +31,14 @@ struct robot_organism *mutate(struct robot_organism *robot) {
                 if (rd_float(0, 1) < WAGE_MUT_PROB) {
                     if (rd_float(0, 1) < 0.5) {
                         robot->wages[i][j] *= rd_float(MUTATION_RANGE_LOW, MUTATION_RANGE_HIGH);
+                        if (isnan(robot->wages[i][j]) || isinf(robot->wages[i][j])) {
+                            robot->wages[i][j] = FLT_MAX;
+                        }
                     } else {
                         robot->wages[i][j] += rd_float(-0.2, 0.2);
+                        if (isnan(robot->wages[i][j]) || isinf(robot->wages[i][j])) {
+                            robot->wages[i][j] = FLT_MAX;
+                        }
                     }
                     
                     if (robot->wages[i][j] < MIN_WAGE_VALUE) {
