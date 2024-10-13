@@ -47,7 +47,9 @@ float rd_float(float min, float max) {
 }
 
 void print_high_score (struct robot_organism **top_ranked) {
+    printf("Start high score\n");
     struct robot_organism top_organism = *(top_ranked[0]);
+    printf("Check point\n");
     float high_score = top_organism.fitness;
     printf("best score of epoch = %f \n", high_score);
     /* FOR DEBUG
@@ -57,5 +59,6 @@ void print_high_score (struct robot_organism **top_ranked) {
         }
     }
     */
+    printf("End high score\n");
     fflush(stdout);
 }

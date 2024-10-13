@@ -69,7 +69,7 @@ void run() {
 
         // Print the high score for debugging/logging purposes
         print_high_score(top_ranked);
-        //print_high_score(mine_saver);
+        print_high_score(mine_saver);
 
         // Create a new population based on top-ranked individuals
         //printf("Creating inherited population\n");

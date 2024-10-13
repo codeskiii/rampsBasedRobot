@@ -48,7 +48,7 @@ struct robot_organism mutate(struct robot_organism robot) {
 
                     // Sprawdzanie NaN i Inf
                     if (isnan(robot.wages[i][j]) || isinf(robot.wages[i][j])) {
-                        robot.wages[i][j] = FLT_MAX;  // Ustalamy wartość na maksymalną
+                        robot.wages[i][j] = FLT_MAX; 
                     }
 
                     // Ograniczenie wartości do zdefiniowanych granic
