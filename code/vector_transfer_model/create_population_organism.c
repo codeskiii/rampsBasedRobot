@@ -65,6 +65,7 @@ struct population *create_not_inherited_population() {
 */
 struct robot_organism create_robot_inherited_organism(struct robot_organism *parentA,
                                                       struct robot_organism *parentB) {
+    //printf("Start of create_robot_inherited_organism\n");
     struct robot_organism childRobot; // Zmiana: obiekt zamiast wskaźnika
 
     // Uzupełnij wages dla childRobot na podstawie rodziców
@@ -92,7 +93,8 @@ struct robot_organism create_robot_inherited_organism(struct robot_organism *par
         childRobot = mutate(childRobot); // Zastosuj mutację
     }
 
-    return childRobot; // Zwróć obiekt dziecka
+    //printf("End of create_robot_inherited_organism\n");
+    return childRobot; 
 }
 
 

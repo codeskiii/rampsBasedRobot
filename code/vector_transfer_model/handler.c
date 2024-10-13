@@ -35,7 +35,12 @@ void run() {
 
     struct robot_organism **rolled_top_ranked;
     struct robot_organism **mine_saver;
+    struct robot_organism **top_ranked;
+    struct population *new_population;
+
+    top_ranked = rank_population(population);
     mine_saver = rank_population(population);  // Ranking pierwszej populacji
+    new_population = create_inherited_population(mine_saver);
 
     printf("Start of training\n");
     for (int i = 0; i < epochs; i++) {
@@ -48,7 +53,7 @@ void run() {
 
         // Rank population
         //printf("Ranking\n");
-        struct robot_organism **top_ranked = rank_population(population);  // Ranking nowej populacji
+        top_ranked = rank_population(population);  // Ranking nowej populacji
 
         //printf("Not diversed stuff\n");
         not_diversed_strak += count_not_diversed_streak(top_ranked);
@@ -64,11 +69,11 @@ void run() {
 
         // Print the high score for debugging/logging purposes
         print_high_score(top_ranked);
-        print_high_score(mine_saver);
+        //print_high_score(mine_saver);
 
         // Create a new population based on top-ranked individuals
         //printf("Creating inherited population\n");
-        struct population *new_population = create_inherited_population(mine_saver);
+        new_population = create_inherited_population(mine_saver);
 
         // Free the old population before replacing it
         //printf("Freeing inherited population\n");
