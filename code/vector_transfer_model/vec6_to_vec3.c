@@ -15,6 +15,10 @@
 
 #define WAGE_SIZE 12
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
 
 /*
 <param name="vec6" type="struct vec6 *">

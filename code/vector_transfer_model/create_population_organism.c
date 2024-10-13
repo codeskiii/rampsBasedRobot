@@ -6,6 +6,11 @@
 #include "create_population.h"
 #include "mutation.h"
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
+
 #define WAGE_SIZE 12
 
 void free_population(struct population *pop) {
@@ -58,34 +63,36 @@ struct population *create_not_inherited_population() {
 </returns>
     A new robot organism.
 */
-struct robot_organism *create_robot_inherited_organism(struct robot_organism *parentA,
+struct robot_organism create_robot_inherited_organism(struct robot_organism *parentA,
                                                       struct robot_organism *parentB) {
-    struct robot_organism *childRobot = malloc(sizeof(struct robot_organism));
-    if (childRobot == NULL) {
-        printf("ERROR: create_robot_inherited_organism");
-        exit(1);
-    }
+    struct robot_organism childRobot; // Zmiana: obiekt zamiast wskaźnika
+
+    // Uzupełnij wages dla childRobot na podstawie rodziców
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < WAGE_SIZE; j++) {
-            if (rd_float(0, 1) < 0.9) {
+            float randomValue = rd_float(0, 1);
+            if (randomValue < 0.9) {
                 if (parentA->fitness > parentB->fitness) {
-                    childRobot->wages[i][j] = (parentA->wages[i][j] * 9.0f + parentB->wages[i][j])/10.0f;
+                    childRobot.wages[i][j] = (parentA->wages[i][j] * 9.0f + parentB->wages[i][j]) / 10.0f;
                 } else {
-                    childRobot->wages[i][j] = (parentA->wages[i][j] + parentB->wages[i][j] * 9.0f)/10.0f;
+                    childRobot.wages[i][j] = (parentA->wages[i][j] + parentB->wages[i][j] * 9.0f) / 10.0f;
                 }
             } else {
-                if (rd_float(0, 1) < 0.5) {
-                    childRobot->wages[i][j] = (parentA->wages[i][j] * 2.0f + parentB->wages[i][j])/3.0f;
+                if (randomValue < 0.95) {
+                    childRobot.wages[i][j] = (parentA->wages[i][j] * 2.0f + parentB->wages[i][j]) / 3.0f;
                 } else {
-                    childRobot->wages[i][j] = (parentA->wages[i][j] + parentB->wages[i][j] * 2.0f)/3.0f;
+                    childRobot.wages[i][j] = (parentA->wages[i][j] + parentB->wages[i][j] * 2.0f) / 3.0f;
                 }
             }
         }
     }
+
+    // Potencjalna mutacja
     if (rd_float(0, 1) < 0.1) {
-        childRobot = mutate(childRobot);
+        childRobot = mutate(childRobot); // Zastosuj mutację
     }
-    return childRobot;
+
+    return childRobot; // Zwróć obiekt dziecka
 }
 
 
@@ -110,8 +117,8 @@ struct population *create_inherited_population(struct robot_organism **parents) 
         do {
             parentB_index = rand() % 10;
         } while (parentB_index == parentA_index);
-
-        currentPopulation->collector[i] = *(create_robot_inherited_organism(parents[parentA_index],
+        //printf("Creating inherited object %d\n", i);
+        currentPopulation->collector[i] = (create_robot_inherited_organism(parents[parentA_index],
                                                                           parents[parentB_index]));
     }
 

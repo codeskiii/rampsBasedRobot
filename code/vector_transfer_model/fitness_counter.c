@@ -8,6 +8,11 @@
 #include "helpers.h"
 #include "fitness_counter.h"
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
+
 /*
 <param name="analyzed_solution" type="struct vec3 *">
     The analyzed solution.

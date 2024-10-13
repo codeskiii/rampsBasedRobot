@@ -5,6 +5,11 @@
 #include "structs.h"
 #include "helpers.h"
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
+
 /*
 <param name="min" type="int">
    The minimum value.

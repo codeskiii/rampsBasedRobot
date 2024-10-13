@@ -12,6 +12,11 @@
 #define GOAL_SIZE 3
 #define POPULATION_SIZE 100
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
+
 /*
 <param name="goal" type="struct vec3 *">
     Goal vector (target for the robot).

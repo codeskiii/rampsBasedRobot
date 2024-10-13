@@ -4,6 +4,11 @@
 #include "structs.h"
 #include "create_population.h"
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
+
 #define MAX_NO_CHANGE_STRAK 100
 
 int count_not_diversed_streak (struct robot_organism **top_ranked)  {

@@ -9,6 +9,11 @@
 #include "predict_on_wages.h"
 #include "fast_quit.h"
 
+#define MEMWATCH 
+#define MW_STDIO 
+
+#include "memwatch.h"
+
 #define MAX_NOT_DIVERSED 50
 
 /*
@@ -18,17 +23,19 @@
 */
 void run() {
     srand(time(NULL));
-    
+
     printf("init first population\n");
     fflush(stdout);
-    struct population *population = create_not_inherited_population();
+    
+    struct population *population = create_not_inherited_population(); // Tworzenie pierwszej populacji
     printf("end\n");
+    
     float epochs = 1000000000;
     int not_diversed_strak = 0;
 
     struct robot_organism **rolled_top_ranked;
     struct robot_organism **mine_saver;
-    mine_saver = rank_population((population));
+    mine_saver = rank_population(population);  // Ranking pierwszej populacji
 
     printf("Start of training\n");
     for (int i = 0; i < epochs; i++) {
@@ -37,40 +44,45 @@ void run() {
 
         // Predict on the current population's wages
         //printf("Predicting\n");
-        predict_on_wages(population);
+        predict_on_wages(population);  // Przewidywanie
 
         // Rank population
         //printf("Ranking\n");
-        struct robot_organism **top_ranked = rank_population(population);
+        struct robot_organism **top_ranked = rank_population(population);  // Ranking nowej populacji
 
+        //printf("Not diversed stuff\n");
         not_diversed_strak += count_not_diversed_streak(top_ranked);
-        if (not_diversed_strak >= MAX_NOT_DIVERSED){
+        if (not_diversed_strak >= MAX_NOT_DIVERSED) {
             not_diversed_strak = 0;
             printf("sort_them...\n");
             mine_saver = sort_them(mine_saver, top_ranked);
             top_ranked = mine_saver;
         }
-        top_ranked = fast_roll(top_ranked);
+
+        //printf("Fast rolling\n");
+        top_ranked = fast_roll(top_ranked);  // Aktualizacja tablicy wskaźników
 
         // Print the high score for debugging/logging purposes
-        //printf("High score\n");
         print_high_score(top_ranked);
         print_high_score(mine_saver);
 
         // Create a new population based on top-ranked individuals
-        //printf("New population\n");
+        //printf("Creating inherited population\n");
         struct population *new_population = create_inherited_population(mine_saver);
 
         // Free the old population before replacing it
-        //printf("Free previous pop\n");
-        free_population(population);
-        // Replace the old population with the new one
-        //printf("Set new pop to pop");
-        population = new_population;
-        free(top_ranked);
+        //printf("Freeing inherited population\n");
+        free_population(population);  // Zwalnianie starej populacji
+        population = new_population;  // Zastąpienie starą nową populacją
+
+        // Zwalnianie dynamicznie alokowanych tablic wskaźników
+        //printf("Freeing top_ranked");
+        free(top_ranked);  // Zwalnianie `top_ranked`, który już nie będzie potrzebny
+        //printf("Does this shit breaks here?\n");
     }
+
     // Free the final population after the training is complete
-    free_population(population);
+    free_population(population);  // Zwalnianie końcowej populacji
 
     printf("END\n");
     fflush(stdout);
