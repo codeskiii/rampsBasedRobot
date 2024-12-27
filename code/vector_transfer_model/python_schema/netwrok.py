@@ -1,6 +1,7 @@
 from random import *
 import random
 import math
+import json
 
 NETWORK_START_ARCHITECTURE: list[int] = [3, 48, 96, 128, 256, 128, 96, 6]
 RANDOM_WEIGHT_MAX_MIN: float = 1.2
@@ -101,3 +102,12 @@ class NeuralNetwork:
                 new_layer_size = random.randint(1, 10)  # Losowa liczba neuronów w nowej warstwie
                 new_layer = [[random.uniform(-1, 1) for _ in range(num_weights)] for _ in range(new_layer_size)]
                 self.network.insert(random.randint(0, len(self.network)), new_layer)  # Wstawiamy nową warstwę w losowym miejscu
+                
+    def save_this_shit(self, filename) -> None:
+        structure = [len(row) for row in self.network]
+        
+        to_save = {
+            'structure': structure,
+            'weights': self.network
+            }
+        
